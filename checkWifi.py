@@ -4,29 +4,40 @@ import socket
 # -> Who else is connected locally
 # ->Get their IP, MAC address, vendor device name, localhost name
 #
-# Function getMyLocalIP()
+# 1- Function getMyLocalIP()
 # Get IP addresses mask
 # Ping all IP addresses in the range
 # List ARP
 # Match MAC <> Vendor name
 #
-# Get the local hostname
-local_hostname = socket.gethostname()
 
-# Get a list of IP addresses associated with the hostname
-ip_addresses = socket.gethostbyname_ex(local_hostname)[2]
+# 1- Function getMyLocalIP()
+def getMyLocalIP():
+    # Get the local hostname
+    local_hostname = socket.gethostname()
+    
+    # Get a list of IP addresses associated with the hostname
+    ip_addresses = socket.gethostbyname_ex(local_hostname)[2]
 
-# Exclude IPs starting with "127."
-cleaned_ips = [ip for ip in ip_addresses if not ip.startswith("127.")]
+    # Exclude IPs starting with "127."
+    cleaned_ips = [ip for ip in ip_addresses if not ip.startswith("127.")]
 
-# Extract the first IP address (if available) from the filtered list.
-first_ip = cleaned_ips[:1]
+    # Extract the first IP address (if available) from the filtered list.
+    first_ip = cleaned_ips[:1]
+    
+    # If not available, exit
+    if first_ip == []:
+        local_ip = "Not available"
+    
+    # Print the obtained IP address to the console.
+    else:
+        local_ip = first_ip[0]
 
-# If not available, exit
-if first_ip == []:
-    print("Local ip not available yet. Exiting.")
+    return local_ip
+
+if getMyLocalIP() == "Not available":
+    print("Local IP not available yet. Exiting.")
     exit()
+print(getMyLocalIP())
 
-# Print the obtained IP address to the console.
-print(first_ip[0])
 
