@@ -1,18 +1,20 @@
 import socket
 import platform
 import os
+import subprocess
 #
 # Objectives:
 # -> Who else is connected locally
 # ->Get their IP, MAC address, vendor device name, localhost name
 #
+
 # 1- Function getMyLocalIP()
-# Get IP addresses mask
+# 2- Get IP addresses mask
 # Ping all IP addresses in the range
 # List ARP
 # Match MAC <> Vendor name
 #
-
+#
 # 1- Function getMyLocalIP()
 def getMyLocalIP():
     # Get the local hostname
@@ -21,8 +23,8 @@ def getMyLocalIP():
     # Get a list of IP addresses associated with the hostname
     ip_addresses = socket.gethostbyname_ex(local_hostname)[2]
 
-    # Exclude IPs starting with "127."
-    cleaned_ips = [ip for ip in ip_addresses if not ip.startswith("127.")]
+    # Exclude IPs starting with "127." and also NordVPN local IP "192.168.56.1" 
+    cleaned_ips = [ip for ip in ip_addresses if not (ip.startswith("127.") or ip=="192.168.56.1")]
 
     # Extract the first IP address (if available) from the filtered list.
     first_ip = cleaned_ips[:1]
@@ -54,10 +56,20 @@ def ping(host):
     command = ['ping', param, '1', host]
     return subprocess.call(command) == 0
 
-
-if getMyLocalIP() == "Not available":
+Local_IP = getMyLocalIP()
+if Local_IP == "Not available":
     print("Local IP not available yet. Exiting.")
     exit()
-print("Local IP: ", getMyLocalIP())
-print("Mask: ", getMaskFromIP(getMyLocalIP()))
+
+local_mask = getMaskFromIP(Local_IP)
+
+print("Local IP: ", Local_IP)
+print("Mask: ", local_mask)
+
+### WORK IN PROGRESS ###
+# Iterate PING from Mask.1 to Mask.254
+#for i in range(1,255):
+#    temp_host = local_mask + "." + str(i)
+#    ping(temp_host)
+### WORK IN PROGRESS ###
 
