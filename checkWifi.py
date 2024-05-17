@@ -54,7 +54,9 @@ def ping(host):
 
     # Building the command. Ex: "ping -c 1 google.com"
     command = ['ping', param, '1', host]
-    return subprocess.call(command) == 0
+    result = subprocess.run(command, shell=True, capture_output=False, text=True, stdout=subprocess.DEVNULL)
+    #print(result)
+    return
 
 Local_IP = getMyLocalIP()
 if Local_IP == "Not available":
@@ -68,8 +70,8 @@ print("Mask: ", local_mask)
 
 ### WORK IN PROGRESS ###
 # Iterate PING from Mask.1 to Mask.254
-#for i in range(1,255):
-#    temp_host = local_mask + "." + str(i)
-#    ping(temp_host)
+for i in range(1,255):
+    temp_host = local_mask + "." + str(i)
+    ping(temp_host)
 ### WORK IN PROGRESS ###
 
